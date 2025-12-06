@@ -2,6 +2,8 @@
 
 A GitHub Action that generates and posts a markdown report to PRs showing the results of quality checks (linting, type checking, and build).
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/uw-datasci/quality-summary)
+
 ## Features
 
 - 📊 Posts a clean markdown summary table to PRs
