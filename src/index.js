@@ -1,25 +1,25 @@
-const core = require("@actions/core");
-const github = require("@actions/github");
-const { generateReport } = require("./report");
+import { info, getInput, setOutput, setFailed } from "@actions/core";
+import { context as _context, getOctokit } from "@actions/github";
+import { generateReport } from "./report";
 
 async function run() {
   try {
-    const context = github.context;
+    const context = _context;
 
     // Don't run on non-PR events
     if (context.eventName !== "pull_request") {
-      core.info("Not a pull request event, skipping PR comment");
+      info("Not a pull request event, skipping PR comment");
       return;
     }
 
     // Get inputs
-    const token = core.getInput("github-token", { required: true });
-    const codeQualityResult = core.getInput("code-quality-result", {
+    const token = getInput("github-token", { required: true });
+    const codeQualityResult = getInput("code-quality-result", {
       required: true,
     });
-    const buildResult = core.getInput("build-result", { required: true });
+    const buildResult = getInput("build-result", { required: true });
 
-    const octokit = github.getOctokit(token);
+    const octokit = getOctokit(token);
 
     const jobResults = {
       codeQuality: codeQualityResult,
@@ -42,7 +42,7 @@ async function run() {
 
     // Update existing comment or create new one
     if (botComment) {
-      core.info(`Updating existing comment ID: ${botComment.id}`);
+      info(`Updating existing comment ID: ${botComment.id}`);
       await octokit.rest.issues.updateComment({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -50,7 +50,7 @@ async function run() {
         body: comment,
       });
     } else {
-      core.info("Creating new comment");
+      info("Creating new comment");
       await octokit.rest.issues.createComment({
         owner: context.repo.owner,
         repo: context.repo.repo,
@@ -59,19 +59,19 @@ async function run() {
       });
     }
 
-    core.info("✅ PR comment posted successfully");
+    info("✅ PR comment posted successfully");
 
     // Set output for whether all checks passed
     const allPassed =
       codeQualityResult === "success" && buildResult === "success";
-    core.setOutput("all-passed", allPassed.toString());
+    setOutput("all-passed", allPassed.toString());
 
     // Fail the action if quality gate didn't pass
     if (!allPassed) {
-      core.setFailed("Quality gate failed: not all checks passed");
+      setFailed("Quality gate failed: not all checks passed");
     }
   } catch (error) {
-    core.setFailed(`Action failed: ${error.message}`);
+    setFailed(`Action failed: ${error.message}`);
   }
 }
 
