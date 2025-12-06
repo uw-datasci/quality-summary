@@ -29976,6 +29976,13 @@ async function analyzeQuality(octokit, context, mode) {
     summary: {}
   };
 
+  // Example: Get repository information using octokit
+  // Uncomment and customize for your use case:
+  // const { data: repo } = await octokit.rest.repos.get({
+  //   owner: context.repo.owner,
+  //   repo: context.repo.repo
+  // });
+
   // Add your custom quality analysis logic here
   // This is a template - extend with your specific requirements
 
@@ -29998,8 +30005,10 @@ async function analyzeQuality(octokit, context, mode) {
 // Export for testing
 module.exports = { run, analyzeQuality };
 
-// Run the action
-run();
+// Run the action only when executed directly
+if (require.main === require.cache[eval('__filename')]) {
+  run();
+}
 
 
 /***/ }),
