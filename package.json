@@ -1,0 +1,35 @@
+{
+  "name": "quality-summary",
+  "version": "1.0.0",
+  "description": "Generates and posts a markdown report to PRs showing the results of quality checks",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js -o dist",
+    "lint": "eslint src/",
+    "test": "node --test src/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uw-datasci/quality-summary.git"
+  },
+  "keywords": [
+    "github-action",
+    "quality-gate",
+    "pr-comment",
+    "ci"
+  ],
+  "author": "uw-datasci",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uw-datasci/quality-summary/issues"
+  },
+  "homepage": "https://github.com/uw-datasci/quality-summary#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.38.3",
+    "eslint": "^8.57.0"
+  }
+}
