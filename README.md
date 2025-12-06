@@ -58,29 +58,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           code-quality-result: ${{ needs.code-quality.result }}
           build-result: ${{ needs.build.result }}
-
-      - name: Check quality gate status
-        run: |
-          if [ "${{ needs.code-quality.result }}" == "success" ] && \
-             [ "${{ needs.build.result }}" == "success" ]; then
-            exit 0
-          else
-            exit 1
-          fi
 ```
 
 ## Inputs
 
-| Input | Description | Required |
-|-------|-------------|----------|
-| `github-token` | GitHub token for API access | Yes |
-| `code-quality-result` | Result of code quality job (success/failure/cancelled/skipped) | Yes |
-| `build-result` | Result of build job (success/failure/cancelled/skipped) | Yes |
+| Input                 | Description                                                    | Required |
+| --------------------- | -------------------------------------------------------------- | -------- |
+| `github-token`        | GitHub token for API access                                    | Yes      |
+| `code-quality-result` | Result of code quality job (success/failure/cancelled/skipped) | Yes      |
+| `build-result`        | Result of build job (success/failure/cancelled/skipped)        | Yes      |
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
+| Output       | Description                                        |
+| ------------ | -------------------------------------------------- |
 | `all-passed` | Whether all quality checks passed (`true`/`false`) |
 
 ## Example Output
@@ -90,6 +81,7 @@ jobs:
 ![All checks passed](https://img.shields.io/badge/Quality%20Gate-Passed-success)
 
 The action posts a comment showing:
+
 - ✅ Linting passed
 - ✅ Type checking passed
 - ✅ Build passed
@@ -100,6 +92,7 @@ The action posts a comment showing:
 ![Quality gate failed](https://img.shields.io/badge/Quality%20Gate-Failed-critical)
 
 The action posts a comment showing:
+
 - Status for each check (passed/failed)
 - Specific guidance on how to fix failures locally
 - Link to the workflow run for detailed logs

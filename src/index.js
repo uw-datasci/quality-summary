@@ -1,27 +1,29 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
-const { generateReport } = require('./report');
+const core = require("@actions/core");
+const github = require("@actions/github");
+const { generateReport } = require("./report");
 
 async function run() {
   try {
     const context = github.context;
 
     // Don't run on non-PR events
-    if (context.eventName !== 'pull_request') {
-      core.info('Not a pull request event, skipping PR comment');
+    if (context.eventName !== "pull_request") {
+      core.info("Not a pull request event, skipping PR comment");
       return;
     }
 
     // Get inputs
-    const token = core.getInput('github-token', { required: true });
-    const codeQualityResult = core.getInput('code-quality-result', { required: true });
-    const buildResult = core.getInput('build-result', { required: true });
+    const token = core.getInput("github-token", { required: true });
+    const codeQualityResult = core.getInput("code-quality-result", {
+      required: true,
+    });
+    const buildResult = core.getInput("build-result", { required: true });
 
     const octokit = github.getOctokit(token);
 
     const jobResults = {
       codeQuality: codeQualityResult,
-      build: buildResult
+      build: buildResult,
     };
 
     // Generate the report comment
@@ -31,11 +33,11 @@ async function run() {
     const { data: comments } = await octokit.rest.issues.listComments({
       owner: context.repo.owner,
       repo: context.repo.repo,
-      issue_number: context.issue.number
+      issue_number: context.issue.number,
     });
 
     const botComment = comments.find(
-      (c) => c.user.type === 'Bot' && c.body.includes('🚦 Quality Gate Report')
+      (c) => c.user.type === "Bot" && c.body.includes("🚦 Quality Gate Report")
     );
 
     // Update existing comment or create new one
@@ -45,26 +47,32 @@ async function run() {
         owner: context.repo.owner,
         repo: context.repo.repo,
         comment_id: botComment.id,
-        body: comment
+        body: comment,
       });
     } else {
-      core.info('Creating new comment');
+      core.info("Creating new comment");
       await octokit.rest.issues.createComment({
         owner: context.repo.owner,
         repo: context.repo.repo,
         issue_number: context.issue.number,
-        body: comment
+        body: comment,
       });
     }
 
-    core.info('✅ PR comment posted successfully');
+    core.info("✅ PR comment posted successfully");
 
     // Set output for whether all checks passed
-    const allPassed = codeQualityResult === 'success' && buildResult === 'success';
-    core.setOutput('all-passed', allPassed.toString());
+    const allPassed =
+      codeQualityResult === "success" && buildResult === "success";
+    core.setOutput("all-passed", allPassed.toString());
+
+    // Fail the action if quality gate didn't pass
+    if (!allPassed) {
+      core.setFailed("Quality gate failed: not all checks passed");
+    }
   } catch (error) {
     core.setFailed(`Action failed: ${error.message}`);
   }
 }
 
-run();
+await run();
