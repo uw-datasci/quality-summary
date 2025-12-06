@@ -1,0 +1,25 @@
+name: 'Quality Gate Summary'
+description: 'Generates and posts a markdown report to PRs showing the results of quality checks'
+author: 'uw-datasci'
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+  code-quality-result:
+    description: 'Result of code quality job (success/failure/cancelled/skipped)'
+    required: true
+  build-result:
+    description: 'Result of build job (success/failure/cancelled/skipped)'
+    required: true
+
+outputs:
+  all-passed:
+    description: 'Whether all quality checks passed (true/false)'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
