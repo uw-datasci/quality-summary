@@ -1,0 +1,25 @@
+name: 'Quality Summary'
+description: 'A reusable GitHub Action template for generating quality summaries'
+author: 'UWaterloo Data Science Club'
+
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  github-token:
+    description: 'GitHub token for API access'
+    required: true
+  
+  mode:
+    description: 'The mode of operation (e.g., summary, detailed)'
+    required: false
+    default: 'summary'
+
+outputs:
+  result:
+    description: 'The result of the quality summary analysis'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
