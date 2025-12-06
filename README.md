@@ -14,36 +14,10 @@ A GitHub Action that generates and posts a markdown report to PRs showing the re
 
 ## Usage
 
-Add this action to your workflow after your quality check jobs:
+Add this action to your workflow after your quality check jobs (as a step):
 
 ```yaml
-name: CI
-
-on:
-  pull_request:
-    branches: [main]
-
 jobs:
-  code-quality:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: pnpm install
-      - name: Lint
-        run: pnpm run lint
-      - name: Type check
-        run: pnpm run typecheck
-
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build
-        run: pnpm run build
-
   quality-summary:
     name: Quality Gate Summary
     runs-on: ubuntu-latest
