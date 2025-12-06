@@ -67,9 +67,7 @@ async function run() {
     setOutput("all-passed", allPassed.toString());
 
     // Fail the action if quality gate didn't pass
-    if (!allPassed) {
-      setFailed("Quality gate failed: not all checks passed");
-    }
+    if (!allPassed) setFailed("Quality gate failed: not all checks passed");
   } catch (error) {
     setFailed(`Action failed: ${error.message}`);
   }
